@@ -1,4 +1,9 @@
-require 'google/cloud/dialogflow/v2'
+begin
+  require 'google/cloud/dialogflow/v2'
+  DIALOGFLOW_AVAILABLE = true
+rescue LoadError
+  DIALOGFLOW_AVAILABLE = false
+end
 
 class Integrations::Dialogflow::ProcessorService < Integrations::BotProcessorService
   pattr_initialize [:event_name!, :hook!, :event_data!]

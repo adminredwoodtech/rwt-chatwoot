@@ -29,6 +29,9 @@ export default [
     props: route => ({
       authError: route.query.error,
       target: route.query.target,
+      // Auto-SSO: pass email and auto_sso for seamless Hub integration
+      email: route.query.email,
+      autoSso: route.query.auto_sso === 'true',
     }),
   },
   {

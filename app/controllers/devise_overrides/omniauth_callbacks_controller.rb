@@ -7,6 +7,11 @@ class DeviseOverrides::OmniauthCallbacksController < DeviseTokenAuth::OmniauthCa
     @resource.present? ? sign_in_user : sign_up_user
   end
 
+  # Google OAuth2 callback
+  def google_oauth2
+    omniauth_success
+  end
+
   private
 
   def sign_in_user

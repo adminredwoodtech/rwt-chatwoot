@@ -357,6 +357,9 @@ Rails.application.routes.draw do
       # Frontend API endpoint to trigger SAML authentication flow
       post 'auth/saml_login', to: 'auth#saml_login'
 
+      # Hub SSO - allows HappSea Hub to get SSO tokens for users
+      post 'hub_sso/login', to: 'hub_sso#login'
+
       resource :profile, only: [:show, :update] do
         delete :avatar, on: :collection
         member do

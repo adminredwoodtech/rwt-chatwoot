@@ -19,6 +19,16 @@ const props = defineProps({
     type: String,
     default: 'web',
   },
+  // Auto-SSO: pre-fill email from Hub/Keycloak session
+  email: {
+    type: String,
+    default: '',
+  },
+  // Auto-SSO: automatically submit form when email is provided
+  autoSso: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const store = useStore();
@@ -62,6 +72,16 @@ onMounted(async () => {
     document
       .querySelector('meta[name="csrf-token"]')
       ?.getAttribute('content') || '';
+
+  // Auto-SSO: pre-fill email and auto-submit if params present
+  // This enables seamless SSO from HappSea Hub iframe
+  if (props.email && props.autoSso) {
+    credentials.value.email = props.email;
+    await nextTick();
+    // Auto-submit the form to trigger SAML flow
+    document.querySelector('form')?.submit();
+    return;
+  }
 
   await nextTick(handleAuthError);
 });

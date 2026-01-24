@@ -1,4 +1,10 @@
-require 'google/cloud/translate/v3'
+begin
+  require 'google/cloud/translate/v3'
+  GOOGLE_TRANSLATE_AVAILABLE = true
+rescue LoadError
+  GOOGLE_TRANSLATE_AVAILABLE = false
+end
+
 class Integrations::GoogleTranslate::DetectLanguageService
   pattr_initialize [:hook!, :message!]
 
