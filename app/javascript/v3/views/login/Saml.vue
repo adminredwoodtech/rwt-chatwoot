@@ -1,7 +1,7 @@
 <script setup>
 import { ref, nextTick, computed, onMounted } from 'vue';
 import { useStore } from 'vuex';
-import { required, email } from '@vuelidate/validators';
+import { required, email as emailValidator } from '@vuelidate/validators';
 import { useVuelidate } from '@vuelidate/core';
 import { useI18n } from 'vue-i18n';
 import { useAlert } from 'dashboard/composables';
@@ -57,7 +57,7 @@ const validations = {
   credentials: {
     email: {
       required,
-      email,
+      email: emailValidator,
     },
   },
 };
