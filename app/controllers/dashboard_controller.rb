@@ -33,6 +33,7 @@ class DashboardController < ActionController::Base
   before_action :ensure_installation_onboarding, only: [:index]
   before_action :render_hc_if_custom_domain, only: [:index]
   before_action :ensure_html_format
+  after_action :allow_hub_iframe
   layout 'vueapp'
 
   def index; end
@@ -107,5 +108,13 @@ class DashboardController < ActionController::Base
     current_path = request.path.gsub(%r{^/app}, '')
 
     sensitive_paths.include?(current_path)
+  end
+
+  def allow_hub_iframe
+    frame_ancestors = ENV.fetch('FRAME_ANCESTORS', nil)
+    return if frame_ancestors.blank?
+
+    response.headers.delete('X-Frame-Options')
+    response.headers['Content-Security-Policy'] = "frame-ancestors 'self' #{frame_ancestors}"
   end
 end
