@@ -222,7 +222,7 @@ export default {
   <main
     class="flex flex-col w-full min-h-screen py-20 bg-n-brand/5 dark:bg-n-background sm:px-6 lg:px-8"
   >
-    <section class="max-w-5xl mx-auto">
+    <section v-if="!ssoAuthToken" class="max-w-5xl mx-auto">
       <img
         :src="globalConfig.logo"
         :alt="globalConfig.installationName"
@@ -256,7 +256,7 @@ export default {
 
     <!-- Regular Login Section -->
     <section
-      v-else
+      v-else-if="!ssoAuthToken"
       class="bg-white shadow sm:mx-auto mt-11 sm:w-full sm:max-w-lg dark:bg-n-solid-2 p-11 sm:shadow-lg sm:rounded-lg"
       :class="{
         'mb-8 mt-15': !showGoogleOAuth,
