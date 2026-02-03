@@ -182,7 +182,8 @@ export default {
           }
 
           this.handleImpersonation();
-          this.showAlertMessage(this.$t('LOGIN.API.SUCCESS_MESSAGE'));
+          // Redirect without showing success message for cleaner SSO experience
+          window.location = '/app';
         })
         .catch(response => {
           // Reset URL Params if the authentication is invalid
