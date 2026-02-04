@@ -302,77 +302,78 @@ const menuItems = computed(() => {
         },
       ],
     },
-    {
-      name: 'Captain',
-      icon: 'i-woot-captain',
-      label: t('SIDEBAR.CAPTAIN'),
-      activeOn: ['captain_assistants_create_index'],
-      children: [
-        {
-          name: 'FAQs',
-          label: t('SIDEBAR.CAPTAIN_RESPONSES'),
-          activeOn: [
-            'captain_assistants_responses_index',
-            'captain_assistants_responses_pending',
-          ],
-          to: accountScopedRoute('captain_assistants_index', {
-            navigationPath: 'captain_assistants_responses_index',
-          }),
-        },
-        {
-          name: 'Documents',
-          label: t('SIDEBAR.CAPTAIN_DOCUMENTS'),
-          activeOn: ['captain_assistants_documents_index'],
-          to: accountScopedRoute('captain_assistants_index', {
-            navigationPath: 'captain_assistants_documents_index',
-          }),
-        },
-        {
-          name: 'Scenarios',
-          label: t('SIDEBAR.CAPTAIN_SCENARIOS'),
-          activeOn: ['captain_assistants_scenarios_index'],
-          to: accountScopedRoute('captain_assistants_index', {
-            navigationPath: 'captain_assistants_scenarios_index',
-          }),
-        },
-        {
-          name: 'Playground',
-          label: t('SIDEBAR.CAPTAIN_PLAYGROUND'),
-          activeOn: ['captain_assistants_playground_index'],
-          to: accountScopedRoute('captain_assistants_index', {
-            navigationPath: 'captain_assistants_playground_index',
-          }),
-        },
-        {
-          name: 'Inboxes',
-          label: t('SIDEBAR.CAPTAIN_INBOXES'),
-          activeOn: ['captain_assistants_inboxes_index'],
-          to: accountScopedRoute('captain_assistants_index', {
-            navigationPath: 'captain_assistants_inboxes_index',
-          }),
-        },
-        {
-          name: 'Tools',
-          label: t('SIDEBAR.CAPTAIN_TOOLS'),
-          activeOn: ['captain_tools_index'],
-          to: accountScopedRoute('captain_assistants_index', {
-            navigationPath: 'captain_tools_index',
-          }),
-        },
-        {
-          name: 'Settings',
-          label: t('SIDEBAR.CAPTAIN_SETTINGS'),
-          activeOn: [
-            'captain_assistants_settings_index',
-            'captain_assistants_guidelines_index',
-            'captain_assistants_guardrails_index',
-          ],
-          to: accountScopedRoute('captain_assistants_index', {
-            navigationPath: 'captain_assistants_settings_index',
-          }),
-        },
-      ],
-    },
+    // HAPPSEA: Captain hidden for MVP - using Claude AI directly
+    // {
+    //   name: 'Captain',
+    //   icon: 'i-woot-captain',
+    //   label: t('SIDEBAR.CAPTAIN'),
+    //   activeOn: ['captain_assistants_create_index'],
+    //   children: [
+    //     {
+    //       name: 'FAQs',
+    //       label: t('SIDEBAR.CAPTAIN_RESPONSES'),
+    //       activeOn: [
+    //         'captain_assistants_responses_index',
+    //         'captain_assistants_responses_pending',
+    //       ],
+    //       to: accountScopedRoute('captain_assistants_index', {
+    //         navigationPath: 'captain_assistants_responses_index',
+    //       }),
+    //     },
+    //     {
+    //       name: 'Documents',
+    //       label: t('SIDEBAR.CAPTAIN_DOCUMENTS'),
+    //       activeOn: ['captain_assistants_documents_index'],
+    //       to: accountScopedRoute('captain_assistants_index', {
+    //         navigationPath: 'captain_assistants_documents_index',
+    //       }),
+    //     },
+    //     {
+    //       name: 'Scenarios',
+    //       label: t('SIDEBAR.CAPTAIN_SCENARIOS'),
+    //       activeOn: ['captain_assistants_scenarios_index'],
+    //       to: accountScopedRoute('captain_assistants_index', {
+    //         navigationPath: 'captain_assistants_scenarios_index',
+    //       }),
+    //     },
+    //     {
+    //       name: 'Playground',
+    //       label: t('SIDEBAR.CAPTAIN_PLAYGROUND'),
+    //       activeOn: ['captain_assistants_playground_index'],
+    //       to: accountScopedRoute('captain_assistants_index', {
+    //         navigationPath: 'captain_assistants_playground_index',
+    //       }),
+    //     },
+    //     {
+    //       name: 'Inboxes',
+    //       label: t('SIDEBAR.CAPTAIN_INBOXES'),
+    //       activeOn: ['captain_assistants_inboxes_index'],
+    //       to: accountScopedRoute('captain_assistants_index', {
+    //         navigationPath: 'captain_assistants_inboxes_index',
+    //       }),
+    //     },
+    //     {
+    //       name: 'Tools',
+    //       label: t('SIDEBAR.CAPTAIN_TOOLS'),
+    //       activeOn: ['captain_tools_index'],
+    //       to: accountScopedRoute('captain_assistants_index', {
+    //         navigationPath: 'captain_tools_index',
+    //       }),
+    //     },
+    //     {
+    //       name: 'Settings',
+    //       label: t('SIDEBAR.CAPTAIN_SETTINGS'),
+    //       activeOn: [
+    //         'captain_assistants_settings_index',
+    //         'captain_assistants_guidelines_index',
+    //         'captain_assistants_guardrails_index',
+    //       ],
+    //       to: accountScopedRoute('captain_assistants_index', {
+    //         navigationPath: 'captain_assistants_settings_index',
+    //       }),
+    //     },
+    //   ],
+    // },
     {
       name: 'Contacts',
       label: t('SIDEBAR.CONTACTS'),
@@ -486,75 +487,77 @@ const menuItems = computed(() => {
         },
       ],
     },
-    {
-      name: 'Campaigns',
-      label: t('SIDEBAR.CAMPAIGNS'),
-      icon: 'i-lucide-megaphone',
-      children: [
-        {
-          name: 'Live chat',
-          label: t('SIDEBAR.LIVE_CHAT'),
-          to: accountScopedRoute('campaigns_livechat_index'),
-        },
-        {
-          name: 'SMS',
-          label: t('SIDEBAR.SMS'),
-          to: accountScopedRoute('campaigns_sms_index'),
-        },
-        {
-          name: 'WhatsApp',
-          label: t('SIDEBAR.WHATSAPP'),
-          to: accountScopedRoute('campaigns_whatsapp_index'),
-        },
-      ],
-    },
-    {
-      name: 'Portals',
-      label: t('SIDEBAR.HELP_CENTER.TITLE'),
-      icon: 'i-lucide-library-big',
-      children: [
-        {
-          name: 'Articles',
-          label: t('SIDEBAR.HELP_CENTER.ARTICLES'),
-          activeOn: [
-            'portals_articles_index',
-            'portals_articles_new',
-            'portals_articles_edit',
-          ],
-          to: accountScopedRoute('portals_index', {
-            navigationPath: 'portals_articles_index',
-          }),
-        },
-        {
-          name: 'Categories',
-          label: t('SIDEBAR.HELP_CENTER.CATEGORIES'),
-          activeOn: [
-            'portals_categories_index',
-            'portals_categories_articles_index',
-            'portals_categories_articles_edit',
-          ],
-          to: accountScopedRoute('portals_index', {
-            navigationPath: 'portals_categories_index',
-          }),
-        },
-        {
-          name: 'Locales',
-          label: t('SIDEBAR.HELP_CENTER.LOCALES'),
-          activeOn: ['portals_locales_index'],
-          to: accountScopedRoute('portals_index', {
-            navigationPath: 'portals_locales_index',
-          }),
-        },
-        {
-          name: 'Settings',
-          label: t('SIDEBAR.HELP_CENTER.SETTINGS'),
-          activeOn: ['portals_settings_index'],
-          to: accountScopedRoute('portals_index', {
-            navigationPath: 'portals_settings_index',
-          }),
-        },
-      ],
-    },
+    // HAPPSEA: Campaigns hidden for MVP - not needed for booking flow
+    // {
+    //   name: 'Campaigns',
+    //   label: t('SIDEBAR.CAMPAIGNS'),
+    //   icon: 'i-lucide-megaphone',
+    //   children: [
+    //     {
+    //       name: 'Live chat',
+    //       label: t('SIDEBAR.LIVE_CHAT'),
+    //       to: accountScopedRoute('campaigns_livechat_index'),
+    //     },
+    //     {
+    //       name: 'SMS',
+    //       label: t('SIDEBAR.SMS'),
+    //       to: accountScopedRoute('campaigns_sms_index'),
+    //     },
+    //     {
+    //       name: 'WhatsApp',
+    //       label: t('SIDEBAR.WHATSAPP'),
+    //       to: accountScopedRoute('campaigns_whatsapp_index'),
+    //     },
+    //   ],
+    // },
+    // HAPPSEA: Help Center hidden for MVP - no knowledge base needed
+    // {
+    //   name: 'Portals',
+    //   label: t('SIDEBAR.HELP_CENTER.TITLE'),
+    //   icon: 'i-lucide-library-big',
+    //   children: [
+    //     {
+    //       name: 'Articles',
+    //       label: t('SIDEBAR.HELP_CENTER.ARTICLES'),
+    //       activeOn: [
+    //         'portals_articles_index',
+    //         'portals_articles_new',
+    //         'portals_articles_edit',
+    //       ],
+    //       to: accountScopedRoute('portals_index', {
+    //         navigationPath: 'portals_articles_index',
+    //       }),
+    //     },
+    //     {
+    //       name: 'Categories',
+    //       label: t('SIDEBAR.HELP_CENTER.CATEGORIES'),
+    //       activeOn: [
+    //         'portals_categories_index',
+    //         'portals_categories_articles_index',
+    //         'portals_categories_articles_edit',
+    //       ],
+    //       to: accountScopedRoute('portals_index', {
+    //         navigationPath: 'portals_categories_index',
+    //       }),
+    //     },
+    //     {
+    //       name: 'Locales',
+    //       label: t('SIDEBAR.HELP_CENTER.LOCALES'),
+    //       activeOn: ['portals_locales_index'],
+    //       to: accountScopedRoute('portals_index', {
+    //         navigationPath: 'portals_locales_index',
+    //       }),
+    //     },
+    //     {
+    //       name: 'Settings',
+    //       label: t('SIDEBAR.HELP_CENTER.SETTINGS'),
+    //       activeOn: ['portals_settings_index'],
+    //       to: accountScopedRoute('portals_index', {
+    //         navigationPath: 'portals_settings_index',
+    //       }),
+    //     },
+    //   ],
+    // },
     {
       name: 'Settings',
       label: t('SIDEBAR.SETTINGS'),
@@ -608,12 +611,13 @@ const menuItems = computed(() => {
           icon: 'i-lucide-code',
           to: accountScopedRoute('attributes_list'),
         },
-        {
-          name: 'Settings Automation',
-          label: t('SIDEBAR.AUTOMATION'),
-          icon: 'i-lucide-repeat',
-          to: accountScopedRoute('automation_list'),
-        },
+        // HAPPSEA: Automation hidden for MVP - using Claude AI instead
+        // {
+        //   name: 'Settings Automation',
+        //   label: t('SIDEBAR.AUTOMATION'),
+        //   icon: 'i-lucide-repeat',
+        //   to: accountScopedRoute('automation_list'),
+        // },
         {
           name: 'Settings Agent Bots',
           label: t('SIDEBAR.AGENT_BOTS'),
@@ -626,12 +630,13 @@ const menuItems = computed(() => {
           icon: 'i-lucide-toy-brick',
           to: accountScopedRoute('macros_wrapper'),
         },
-        {
-          name: 'Settings Canned Responses',
-          label: t('SIDEBAR.CANNED_RESPONSES'),
-          icon: 'i-lucide-message-square-quote',
-          to: accountScopedRoute('canned_list'),
-        },
+        // HAPPSEA: Canned Responses hidden for MVP - AI generates responses
+        // {
+        //   name: 'Settings Canned Responses',
+        //   label: t('SIDEBAR.CANNED_RESPONSES'),
+        //   icon: 'i-lucide-message-square-quote',
+        //   to: accountScopedRoute('canned_list'),
+        // },
         {
           name: 'Settings Integrations',
           label: t('SIDEBAR.INTEGRATIONS'),
