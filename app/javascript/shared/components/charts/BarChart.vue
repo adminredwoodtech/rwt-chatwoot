@@ -24,7 +24,7 @@ const props = defineProps({
 ChartJS.register(Title, Tooltip, BarElement, CategoryScale, LinearScale);
 
 const fontFamily =
-  'Inter,-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+  'Roboto,-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI","Helvetica Neue",Arial,sans-serif';
 
 const defaultChartOptions = {
   responsive: true,

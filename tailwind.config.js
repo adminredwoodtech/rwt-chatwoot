@@ -8,15 +8,15 @@ const {
 } = require('@egoist/tailwindcss-icons');
 
 const defaultSansFonts = [
+  '"Roboto"',
   '-apple-system',
   'system-ui',
   'BlinkMacSystemFont',
   '"Segoe UI"',
-  'Roboto',
   '"Helvetica Neue"',
   'Tahoma',
   'Arial',
-  'sans-serif !important',
+  'sans-serif',
 ];
 
 const tailwindConfig = {
@@ -40,8 +40,8 @@ const tailwindConfig = {
     extend: {
       fontFamily: {
         sans: defaultSansFonts,
-        inter: ['Inter', ...defaultSansFonts],
-        interDisplay: ['InterDisplay', ...defaultSansFonts],
+        inter: defaultSansFonts,
+        interDisplay: defaultSansFonts,
       },
       fontWeight: {
         420: '420',
