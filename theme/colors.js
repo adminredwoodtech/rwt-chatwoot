@@ -243,6 +243,7 @@ export const colors = {
       'amber-button': 'rgb(var(--solid-amber-button) / <alpha-value>)',
       blue: 'rgb(var(--solid-blue) / <alpha-value>)',
       'blue-2': 'rgb(var(--solid-blue-2) / <alpha-value>)',
+      teal: 'rgb(var(--solid-teal) / <alpha-value>)',
       red: 'rgb(var(--solid-red) / <alpha-value>)',
       iris: 'rgb(var(--solid-iris) / <alpha-value>)',
       purple: 'rgb(var(--solid-purple) / <alpha-value>)',
