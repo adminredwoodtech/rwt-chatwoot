@@ -705,7 +705,7 @@
       "CONFIRM_BUTTON_LABEL": "建立",
       "NAME": {
         "LABEL": "姓名",
-        "PLACEHOLDER": "使用者指南 | Chatwoot",
+        "PLACEHOLDER": "使用者指南 | RWT",
         "MESSAGE": "為您的門戶選擇一個名稱。",
         "ERROR": "名稱為必填"
       },

@@ -16,7 +16,7 @@
     "CREATE_FLOW": {
       "CHANNEL": {
         "TITLE": "Choose Channel",
-        "BODY": "Choose the provider you want to integrate with Chatwoot."
+        "BODY": "Choose the provider you want to integrate with RWT."
       },
       "INBOX": {
         "TITLE": "Create Inbox",
@@ -42,7 +42,7 @@
         "PLACEHOLDER": "Sisesta oma veebisaidi nimi (nt Acme Inc)"
       },
       "FB": {
-        "HELP": "PS: Sisselogimisel pääseme ligi ainult teie lehe sõnumitele. Teie privaatseid sõnumeid Chatwoot ei pääse kunagi ligi.",
+        "HELP": "PS: Sisselogimisel pääseme ligi ainult teie lehe sõnumitele. Teie privaatseid sõnumeid RWT ei pääse kunagi ligi.",
         "CHOOSE_PAGE": "Vali leht",
         "CHOOSE_PLACEHOLDER": "Valige nimekirjast leht",
         "INBOX_NAME": "Postkasti nimi",
@@ -441,7 +441,7 @@
       },
       "AUTH": {
         "TITLE": "Vali kanal",
-        "DESC": "Chatwoot toetab vestlusvidinaid, Facebook Messengeri, WhatsAppi, e-kirju jms kanalitena. Kui soovid luua kohandatud kanali, saad selle luua API kanali abil. Alustamiseks vali allolevatest kanalitest üks.",
+        "DESC": "RWT toetab vestlusvidinaid, Facebook Messengeri, WhatsAppi, e-kirju jms kanalitena. Kui soovid luua kohandatud kanali, saad selle luua API kanali abil. Alustamiseks vali allolevatest kanalitest üks.",
         "TITLE_NEXT": "Complete the setup",
         "TITLE_FINISH": "Voilà!",
         "CHANNEL": {
@@ -499,11 +499,11 @@
       },
       "DETAILS": {
         "TITLE": "Postkasti üksikasjad",
-        "DESC": "Valige allolevast rippmenüüst Facebooki leht, mida soovite Chatwootiga ühendada. Võite ka anda postkastile kohandatud nime parema äratundmise jaoks."
+        "DESC": "Valige allolevast rippmenüüst Facebooki leht, mida soovite RWTiga ühendada. Võite ka anda postkastile kohandatud nime parema äratundmise jaoks."
       },
       "FINISH": {
         "TITLE": "Valmis!",
-        "DESC": "Olete edukalt ühendanud oma Facebooki lehe Chatwootiga. Järgmine kord, kui klient teie lehele sõnumi saadab, kuvatakse vestlus automaatselt teie postkastis.<br>Samuti anname teile vidina skripti, mille saate hõlpsasti oma veebisaidile lisada. Kui see on teie veebisaidil aktiivne, saavad kliendid teile otse veebisaidilt sõnumeid saata ilma väliste tööriistadeta ning vestlus kuvatakse siin, Chatwootis.<br>Lahe, eks? Me püüame kindlasti :)"
+        "DESC": "Olete edukalt ühendanud oma Facebooki lehe RWTiga. Järgmine kord, kui klient teie lehele sõnumi saadab, kuvatakse vestlus automaatselt teie postkastis.<br>Samuti anname teile vidina skripti, mille saate hõlpsasti oma veebisaidile lisada. Kui see on teie veebisaidil aktiivne, saavad kliendid teile otse veebisaidilt sõnumeid saata ilma väliste tööriistadeta ning vestlus kuvatakse siin, RWTis.<br>Lahe, eks? Me püüame kindlasti :)"
       },
       "EMAIL_PROVIDER": {
         "TITLE": "Valige oma e-posti teenusepakkuja",
@@ -1115,7 +1115,7 @@
         "USER_MESSAGE": "Tere",
         "AGENT_MESSAGE": "Tere"
       },
-      "BRANDING_TEXT": "Toetab Chatwoot’i",
+      "BRANDING_TEXT": "Toetab RWT’i",
       "SCRIPT_SETTINGS": "\n      window.chatwootSettings = {options};"
     },
     "EMAIL_PROVIDERS": {
