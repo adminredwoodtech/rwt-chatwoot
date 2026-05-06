@@ -28,11 +28,17 @@ export const login = async ({
 
     setAuthCredentials(response);
     clearLocalStorageOnLogout();
-    window.location = getLoginRedirectURL({
-      ssoAccountId,
-      ssoConversationId,
-      user: response.data.data,
-    });
+    // Use `replace` (not assign) so the consumed `sso_auth_token` URL does not
+    // remain in the iframe's session history. Otherwise, pressing the browser
+    // Back button while embedded in HappSea Hub revisits the SSO URL with an
+    // already-invalidated token and shows the Chatwoot login page.
+    window.location.replace(
+      getLoginRedirectURL({
+        ssoAccountId,
+        ssoConversationId,
+        user: response.data.data,
+      })
+    );
     return null;
   } catch (error) {
     // Check if it's an MFA required response

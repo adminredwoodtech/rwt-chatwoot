@@ -182,13 +182,16 @@ export default {
           }
 
           this.handleImpersonation();
-          // Redirect without showing success message for cleaner SSO experience
-          window.location = '/app';
+          // Use `replace` so the consumed `sso_auth_token` URL is not kept in
+          // the iframe history (HappSea Hub embed). Pressing Back would otherwise
+          // revisit the SSO URL with an invalidated token and render the login form.
+          window.location.replace('/app');
         })
         .catch(response => {
-          // Reset URL Params if the authentication is invalid
+          // Reset URL Params if the authentication is invalid; replace so the
+          // failed SSO URL is dropped from history.
           if (this.email) {
-            window.location = '/app/login';
+            window.location.replace('/app/login');
           }
           this.loginApi.hasErrored = true;
           this.showAlertMessage(
@@ -205,9 +208,10 @@ export default {
       this.submitLogin();
     },
     handleMfaVerified() {
-      // MFA verification successful, continue with login
+      // MFA verification successful, continue with login.
+      // Use `replace` for parity with the SSO path so the MFA URL is not kept in history.
       this.handleImpersonation();
-      window.location = '/app';
+      window.location.replace('/app');
     },
     handleMfaCancel() {
       // User cancelled MFA, reset state
