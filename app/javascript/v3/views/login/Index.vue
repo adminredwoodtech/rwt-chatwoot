@@ -182,10 +182,12 @@ export default {
           }
 
           this.handleImpersonation();
-          // Use `replace` so the consumed `sso_auth_token` URL is not kept in
-          // the iframe history (HappSea Hub embed). Pressing Back would otherwise
-          // revisit the SSO URL with an invalidated token and render the login form.
-          window.location.replace('/app');
+          // NOTE: do NOT redirect here. `login()` in `api/auth.js` already calls
+          // `window.location.replace(getLoginRedirectURL(...))`, which honors
+          // `ssoAccountId` / `ssoConversationId` and lands on
+          // `/app/accounts/:id/conversations/:cid` for deep-linking from the
+          // HappSea Hub. Issuing a second `window.location.replace('/app')`
+          // here clobbers that target and forces the agent into the inbox.
         })
         .catch(response => {
           // Reset URL Params if the authentication is invalid; replace so the
