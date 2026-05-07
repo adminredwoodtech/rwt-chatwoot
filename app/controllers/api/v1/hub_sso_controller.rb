@@ -12,6 +12,8 @@ class Api::V1::HubSsoController < ApplicationController
   #   name: user's display name (optional, used when creating new users)
   #   timestamp: request timestamp (for replay protection)
   #   signature: HMAC-SHA256 signature of "email:timestamp" using shared secret
+  #   sso_account_id (optional): account to land on after SSO
+  #   sso_conversation_id (optional): conversation to deep-link into within that account
   def login
     user = find_or_create_user
 
@@ -20,11 +22,43 @@ class Api::V1::HubSsoController < ApplicationController
       return
     end
 
-    sso_url = user.generate_sso_link
+    sso_url = append_redirect_params(user.generate_sso_link)
     render json: { url: sso_url }
   end
 
   private
+
+  # Appends optional deep-link query params (sso_account_id, sso_conversation_id)
+  # to the SSO URL so Chatwoot's Vue Login route can forward them to
+  # `getLoginRedirectURL`, landing the user on /app/accounts/:id/conversations/:cid.
+  # Authorization is still enforced server-side at render time; this is a UX hint.
+  def append_redirect_params(sso_url)
+    extras = redirect_params
+    return sso_url if extras.empty?
+
+    uri = URI.parse(sso_url)
+    query = URI.decode_www_form(uri.query.to_s)
+    extras.each { |key, value| query << [key, value.to_s] }
+    uri.query = URI.encode_www_form(query)
+    uri.to_s
+  end
+
+  def redirect_params
+    {}.tap do |result|
+      account_id = sanitized_id(params[:sso_account_id])
+      conversation_id = sanitized_id(params[:sso_conversation_id])
+      result[:sso_account_id] = account_id if account_id
+      result[:sso_conversation_id] = conversation_id if conversation_id
+    end
+  end
+
+  def sanitized_id(value)
+    str = value.to_s.strip
+    return nil if str.blank?
+    return nil unless str.match?(/\A\d+\z/)
+
+    str
+  end
 
   def find_or_create_user
     user = User.from_email(params[:email])
