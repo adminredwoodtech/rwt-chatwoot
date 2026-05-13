@@ -1370,14 +1370,7 @@ export default {
             @remove-attachment="removeAttachment"
           />
         </div>
-        <MessageSignatureMissingAlert
-          v-if="
-            isSignatureEnabledForInbox &&
-            !isSignatureAvailable &&
-            isDefaultEditorMode
-          "
-          class="mb-2"
-        />
+        <!-- HAPPSEA: Signature alert hidden - signature feature not used -->
       </div>
     </Transition>
 

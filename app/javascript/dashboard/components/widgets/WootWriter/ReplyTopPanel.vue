@@ -161,36 +161,6 @@ export default {
         </span>
       </div>
     </div>
-    <div v-if="captainTasksEnabled" class="flex items-center gap-2">
-      <div class="relative">
-        <NextButton
-          ghost
-          :disabled="disabled || isEditorDisabled"
-          :class="{
-            'text-n-violet-9 hover:enabled:!bg-n-violet-3': !showCopilotMenu,
-            'text-n-violet-9 bg-n-violet-3': showCopilotMenu,
-          }"
-          sm
-          icon="i-ph-sparkle-fill"
-          @click="toggleCopilotMenu"
-        />
-        <CopilotMenuBar
-          v-if="showCopilotMenu"
-          v-on-click-outside="handleClickOutside"
-          :has-selection="false"
-          :editor-content="editorContent"
-          :conversation-id="conversationId"
-          class="ltr:right-0 rtl:left-0 bottom-full mb-2"
-          @execute-copilot-action="handleCopilotAction"
-        />
-      </div>
-      <NextButton
-        ghost
-        class="text-n-slate-11"
-        sm
-        icon="i-lucide-maximize-2"
-        @click="$emit('togglePopout')"
-      />
-    </div>
+    <!-- HAPPSEA: Captain AI commands and popout hidden - using HappSea Bridge instead -->
   </div>
 </template>
