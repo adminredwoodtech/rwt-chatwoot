@@ -106,11 +106,11 @@ const onCardClick = e => {
           <CardPriorityIcon :priority="conversation.priority || null" />
           <div
             v-tooltip.left="inboxName"
-            class="flex items-center justify-center flex-shrink-0 rounded-full bg-n-alpha-2 size-5"
+            class="flex items-center justify-center flex-shrink-0 rounded-full bg-n-alpha-4 size-6"
           >
             <Icon
               :icon="inboxIcon"
-              class="flex-shrink-0 text-n-slate-11 size-3"
+              class="flex-shrink-0 text-n-slate-12 size-3.5"
             />
           </div>
           <span class="text-sm text-n-slate-10">

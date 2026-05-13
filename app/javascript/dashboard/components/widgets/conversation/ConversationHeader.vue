@@ -13,6 +13,7 @@ import { conversationListPageURL } from 'dashboard/helper/URLHelper';
 import { snoozedReopenTime } from 'dashboard/helper/snoozeHelpers';
 import { useInbox } from 'dashboard/composables/useInbox';
 import { useI18n } from 'vue-i18n';
+import HappseaAIButton from 'dashboard/components-next/happsea/HappseaAIButton.vue';
 
 const props = defineProps({
   chat: {
@@ -150,6 +151,11 @@ const hasSlaPolicyId = computed(() => props.chat?.sla_policy_id);
         show-extended-info
         :parent-width="width"
         class="hidden md:flex"
+      />
+      <!-- HAPPSEA: AI pause/resume button — only visible when AI is paused -->
+      <HappseaAIButton
+        v-if="currentChat.id"
+        :conversation-id="currentChat.id"
       />
       <MoreActions :conversation-id="currentChat.id" />
     </div>

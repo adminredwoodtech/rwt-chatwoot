@@ -342,15 +342,8 @@ export default {
         :label="recordingAudioDurationText"
         @click="toggleAudioRecorderPlayPause"
       />
-      <NextButton
-        v-if="showMessageSignatureButton"
-        v-tooltip.top-end="signatureToggleTooltip"
-        icon="i-ph-signature"
-        slate
-        faded
-        sm
-        @click="toggleMessageSignature"
-      />
+      <!-- HAPPSEA: Signature button hidden - agents don't use email signatures -->
+
       <NextButton
         v-if="showQuotedReplyToggle"
         v-tooltip.top-end="quotedReplyToggleTooltip"

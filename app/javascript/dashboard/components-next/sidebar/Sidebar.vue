@@ -450,56 +450,58 @@ const menuItems = computed(() => {
         },
       ],
     },
-    {
-      name: 'Companies',
-      label: t('SIDEBAR.COMPANIES'),
-      icon: 'i-lucide-building-2',
-      children: [
-        {
-          name: 'All Companies',
-          label: t('SIDEBAR.ALL_COMPANIES'),
-          to: accountScopedRoute(
-            'companies_dashboard_index',
-            {},
-            { page: 1, search: undefined }
-          ),
-          activeOn: ['companies_dashboard_index'],
-        },
-      ],
-    },
-    {
-      name: 'Reports',
-      label: t('SIDEBAR.REPORTS'),
-      icon: 'i-lucide-chart-spline',
-      children: [
-        {
-          name: 'Report Overview',
-          label: t('SIDEBAR.REPORTS_OVERVIEW'),
-          to: accountScopedRoute('account_overview_reports'),
-        },
-        {
-          name: 'Report Conversation',
-          label: t('SIDEBAR.REPORTS_CONVERSATION'),
-          to: accountScopedRoute('conversation_reports'),
-        },
-        ...reportRoutes.value,
-        {
-          name: 'Reports CSAT',
-          label: t('SIDEBAR.CSAT'),
-          to: accountScopedRoute('csat_reports'),
-        },
-        {
-          name: 'Reports SLA',
-          label: t('SIDEBAR.REPORTS_SLA'),
-          to: accountScopedRoute('sla_reports'),
-        },
-        {
-          name: 'Reports Bot',
-          label: t('SIDEBAR.REPORTS_BOT'),
-          to: accountScopedRoute('bot_reports'),
-        },
-      ],
-    },
+    // HAPPSEA: Companies hidden - booking model is individual customers, not B2B
+    // {
+    //   name: 'Companies',
+    //   label: t('SIDEBAR.COMPANIES'),
+    //   icon: 'i-lucide-building-2',
+    //   children: [
+    //     {
+    //       name: 'All Companies',
+    //       label: t('SIDEBAR.ALL_COMPANIES'),
+    //       to: accountScopedRoute(
+    //         'companies_dashboard_index',
+    //         {},
+    //         { page: 1, search: undefined }
+    //       ),
+    //       activeOn: ['companies_dashboard_index'],
+    //     },
+    //   ],
+    // },
+    // HAPPSEA: Reports hidden - analytics are handled in the HappSea Hub (Uso de la IA, etc.)
+    // {
+    //   name: 'Reports',
+    //   label: t('SIDEBAR.REPORTS'),
+    //   icon: 'i-lucide-chart-spline',
+    //   children: [
+    //     {
+    //       name: 'Report Overview',
+    //       label: t('SIDEBAR.REPORTS_OVERVIEW'),
+    //       to: accountScopedRoute('account_overview_reports'),
+    //     },
+    //     {
+    //       name: 'Report Conversation',
+    //       label: t('SIDEBAR.REPORTS_CONVERSATION'),
+    //       to: accountScopedRoute('conversation_reports'),
+    //     },
+    //     ...reportRoutes.value,
+    //     {
+    //       name: 'Reports CSAT',
+    //       label: t('SIDEBAR.CSAT'),
+    //       to: accountScopedRoute('csat_reports'),
+    //     },
+    //     {
+    //       name: 'Reports SLA',
+    //       label: t('SIDEBAR.REPORTS_SLA'),
+    //       to: accountScopedRoute('sla_reports'),
+    //     },
+    //     {
+    //       name: 'Reports Bot',
+    //       label: t('SIDEBAR.REPORTS_BOT'),
+    //       to: accountScopedRoute('bot_reports'),
+    //     },
+    //   ],
+    // },
     // HAPPSEA: Campaigns hidden for MVP - not needed for booking flow
     // {
     //   name: 'Campaigns',
