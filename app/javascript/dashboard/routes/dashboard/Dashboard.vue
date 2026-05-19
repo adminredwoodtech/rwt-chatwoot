@@ -64,6 +64,18 @@ export default {
     };
   },
   computed: {
+    // HAPPSEA: hide Chatwoot's own sidebar when embedded in HappSea Hub.
+    // Two independent checks so either one is enough:
+    //   1. window.self !== window.top  — always true inside any iframe, no setup needed
+    //   2. sessionStorage flag         — belt-and-suspenders for edge cases
+    isHappseaEmbedded() {
+      try {
+        if (window.self !== window.top) return true;
+        return sessionStorage.getItem('happsea_embedded') === 'true';
+      } catch {
+        return true;
+      }
+    },
     isSmallScreen() {
       return this.windowWidth < wootConstants.SMALL_SCREEN_BREAKPOINT;
     },
@@ -132,6 +144,7 @@ export default {
 <template>
   <div class="flex flex-grow overflow-hidden text-n-slate-12">
     <NextSidebar
+      v-if="!isHappseaEmbedded"
       :is-mobile-sidebar-open="isMobileSidebarOpen"
       @toggle-account-modal="toggleAccountModal"
       @open-key-shortcut-modal="toggleKeyShortcutModal"
@@ -149,6 +162,7 @@ export default {
         :bypass-upgrade-page="bypassUpgradePage"
       >
         <MobileSidebarLauncher
+          v-if="!isHappseaEmbedded"
           :is-mobile-sidebar-open="isMobileSidebarOpen"
           @toggle="toggleMobileSidebar"
         />
@@ -158,6 +172,7 @@ export default {
         <CommandBar />
         <CopilotLauncher />
         <MobileSidebarLauncher
+          v-if="!isHappseaEmbedded"
           :is-mobile-sidebar-open="isMobileSidebarOpen"
           @toggle="toggleMobileSidebar"
         />

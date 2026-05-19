@@ -43,6 +43,8 @@ export default {
     ssoConversationId: { type: String, default: '' },
     email: { type: String, default: '' },
     authError: { type: String, default: '' },
+    // HAPPSEA: true when the login page is loaded inside the HappSea Hub iframe
+    happseaEmbedded: { type: Boolean, default: false },
   },
   setup() {
     const { replaceInstallationName } = useBranding();
@@ -101,6 +103,12 @@ export default {
     },
   },
   created() {
+    // HAPPSEA: persist the embedded flag before submitLogin() triggers
+    // window.location.replace(), which drops all query params. sessionStorage
+    // survives same-origin navigations within the iframe session.
+    if (this.happseaEmbedded) {
+      try { sessionStorage.setItem('happsea_embedded', 'true'); } catch (_) { /* noop */ }
+    }
     if (this.ssoAuthToken) {
       this.submitLogin();
     }
