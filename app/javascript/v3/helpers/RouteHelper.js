@@ -12,6 +12,14 @@ const validateSSOLoginParams = to => {
 };
 
 export const validateRouteAccess = (to, next, chatwootConfig = {}) => {
+  // HAPPSEA: Capture embedded flag BEFORE any redirect. When a valid auth
+  // cookie exists, the login page is skipped entirely, so this router guard
+  // is the only reliable place to persist the flag before
+  // window.location.replace() drops all query params.
+  if (to.query && to.query.happsea_embedded === 'true') {
+    try { sessionStorage.setItem('happsea_embedded', 'true'); } catch (_) { /* noop */ }
+  }
+
   // Pages with ignoreSession:true would be rendered
   // even if there is an active session
   // Used for confirmation or password reset pages
