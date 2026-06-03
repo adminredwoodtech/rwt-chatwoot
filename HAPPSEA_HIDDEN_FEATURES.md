@@ -7,7 +7,16 @@
 
 ## Overview
 
-For the HappSea AI MVP, several Chatwoot features were hidden (not deleted) to simplify the user interface and focus on core messaging functionality. All code remains intact and can be re-enabled by uncommenting the relevant sections.
+For the HappSea AI MVP, several Chatwoot features were hidden to simplify the user interface and focus on core messaging functionality. All code remains intact and can be re-enabled via the `ENABLE_CHATWOOT_ADMIN` environment variable.
+
+### Environment Toggle
+
+```bash
+ENABLE_CHATWOOT_ADMIN=true   # full admin UI (Reports, Campaigns, Help Center, etc.)
+ENABLE_CHATWOOT_ADMIN=false  # light agent UI (default)
+```
+
+When enabled, the fork restores all sidebar items and frontend routes listed below. No code changes are required per client — only set the variable and restart containers.
 
 ---
 
@@ -38,7 +47,7 @@ For the HappSea AI MVP, several Chatwoot features were hidden (not deleted) to s
 - If you want AI features that don't require external API calls
 
 **How to re-enable**:
-Uncomment lines 305-376 in `Sidebar.vue`
+Set `ENABLE_CHATWOOT_ADMIN=true` and restart Chatwoot (or uncomment the Captain block in `Sidebar.vue` for a permanent code change).
 
 ---
 

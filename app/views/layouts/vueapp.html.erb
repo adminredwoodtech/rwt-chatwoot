@@ -56,6 +56,7 @@
         enabledLanguages: <%= available_locales_with_name.to_json.html_safe %>,
         helpUrls: <%= feature_help_urls.to_json.html_safe %>,
         selectedLocale: '<%= I18n.locale %>',
+        adminFeaturesEnabled: <%= ADMIN_FEATURES_ENABLED.to_json %>,
         // HAPPSEA: Bridge connection for AI-status panel
         happsea_bridge_url: '<%= ENV.fetch('HAPPSEA_BRIDGE_URL', '') %>',
         happsea_bridge_token: '<%= ENV.fetch('HAPPSEA_BRIDGE_API_TOKEN', '') %>'
