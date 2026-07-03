@@ -40,29 +40,47 @@ class Webhooks::Trigger
 
   def perform_request
     body = @payload.to_json
-    SafeFetch.fetch(
-      @url,
-      method: :post,
-      body: body,
-      headers: request_headers(body),
-      open_timeout: webhook_timeout,
-      read_timeout: webhook_timeout,
-      validate_content_type: false,
-      ip_allowlist: webhook_ip_allowlist
-    ) { |_response| nil }
+    if internal_webhook_url?
+      perform_direct_request(body)
+    else
+      SafeFetch.fetch(
+        @url,
+        method: :post,
+        body: body,
+        headers: request_headers(body),
+        open_timeout: webhook_timeout,
+        read_timeout: webhook_timeout,
+        validate_content_type: false
+      ) { |_response| nil }
+    end
   end
 
-  # Reads CHATWOOT_WEBHOOK_IP_ALLOWLIST (comma-separated CIDR ranges, e.g. "172.16.0.0/12,10.0.0.0/8")
-  # to allow webhooks targeting private/Docker-internal hosts. Empty by default (full SSRF protection).
-  def webhook_ip_allowlist
-    @webhook_ip_allowlist ||= begin
-      raw = ENV.fetch('CHATWOOT_WEBHOOK_IP_ALLOWLIST', '')
-      raw.split(',').filter_map do |cidr|
-        IPAddr.new(cidr.strip)
-      rescue IPAddr::InvalidAddressError, IPAddr::AddressFamilyError
-        nil
-      end
-    end
+  # Sends a plain Net::HTTP POST, bypassing SsrfFilter for trusted internal hosts.
+  def perform_direct_request(body)
+    uri = URI.parse(@url)
+    http = Net::HTTP.new(uri.host, uri.port)
+    http.open_timeout = webhook_timeout
+    http.read_timeout = webhook_timeout
+    req = Net::HTTP::Post.new(uri.request_uri, request_headers(body))
+    req.body = body
+    http.request(req)
+  end
+
+  # Returns true if the webhook hostname resolves to an IP within CHATWOOT_WEBHOOK_IP_ALLOWLIST.
+  # ssrf_filter 1.5.x has no built-in allowlist, so we check manually and use plain Net::HTTP
+  # for admin-configured internal endpoints (e.g. the bridge container on the Docker network).
+  def internal_webhook_url?
+    raw = ENV.fetch('CHATWOOT_WEBHOOK_IP_ALLOWLIST', '')
+    return false if raw.blank?
+
+    allowed = raw.split(',').filter_map { |cidr| IPAddr.new(cidr.strip) rescue nil }
+    return false if allowed.empty?
+
+    hostname = URI.parse(@url).hostname
+    resolved = Resolv.getaddresses(hostname).filter_map { |ip| IPAddr.new(ip) rescue nil }
+    resolved.any? { |ip| allowed.any? { |range| range === ip } }
+  rescue StandardError
+    false
   end
 
   def request_headers(body)
