@@ -38,6 +38,8 @@ gem 'json_schemer'
 gem 'json_refs'
 # Rack middleware for blocking & throttling abusive requests
 gem 'rack-attack', '>= 6.7.0'
+# SSRF-safe HTTP fetching for webhook triggers and external downloads
+gem 'ssrf_filter', '~> 1.5'
 # a utility tool for streaming, flexible and safe downloading of remote files
 gem 'down'
 # authentication type to fetch and send mail over oauth2.0
