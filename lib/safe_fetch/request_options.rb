@@ -9,11 +9,12 @@ class SafeFetch::RequestOptions
     http_basic_authentication: nil,
     allowed_content_type_prefixes: SafeFetch::DEFAULT_ALLOWED_CONTENT_TYPE_PREFIXES,
     allowed_content_types: SafeFetch::DEFAULT_ALLOWED_CONTENT_TYPES,
-    validate_content_type: true
+    validate_content_type: true,
+    ip_allowlist: []
   }.freeze
 
   attr_reader :allowed_content_type_prefixes, :allowed_content_types, :body, :headers,
-              :http_basic_authentication, :method, :open_timeout, :read_timeout, :uri, :url
+              :http_basic_authentication, :ip_allowlist, :method, :open_timeout, :read_timeout, :uri, :url
 
   def initialize(url:, **options)
     config = DEFAULTS.merge(options)
@@ -29,6 +30,7 @@ class SafeFetch::RequestOptions
     @allowed_content_type_prefixes = Array(config[:allowed_content_type_prefixes])
     @allowed_content_types = Array(config[:allowed_content_types])
     @validate_content_type = config[:validate_content_type]
+    @ip_allowlist = Array(config[:ip_allowlist])
   end
 
   def effective_max_bytes
@@ -40,13 +42,15 @@ class SafeFetch::RequestOptions
   end
 
   def request_options
-    {
+    opts = {
       headers: headers,
       body: body,
       request_proc: request_proc,
       sensitive_headers: sensitive_headers,
       http_options: { open_timeout: open_timeout, read_timeout: read_timeout }
     }
+    opts[:ip_allowlist] = ip_allowlist if ip_allowlist.present?
+    opts
   end
 
   def validate_content_type?

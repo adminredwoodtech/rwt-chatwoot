@@ -47,8 +47,22 @@ class Webhooks::Trigger
       headers: request_headers(body),
       open_timeout: webhook_timeout,
       read_timeout: webhook_timeout,
-      validate_content_type: false
+      validate_content_type: false,
+      ip_allowlist: webhook_ip_allowlist
     ) { |_response| nil }
+  end
+
+  # Reads CHATWOOT_WEBHOOK_IP_ALLOWLIST (comma-separated CIDR ranges, e.g. "172.16.0.0/12,10.0.0.0/8")
+  # to allow webhooks targeting private/Docker-internal hosts. Empty by default (full SSRF protection).
+  def webhook_ip_allowlist
+    @webhook_ip_allowlist ||= begin
+      raw = ENV.fetch('CHATWOOT_WEBHOOK_IP_ALLOWLIST', '')
+      raw.split(',').filter_map do |cidr|
+        IPAddr.new(cidr.strip)
+      rescue IPAddr::InvalidAddressError, IPAddr::AddressFamilyError
+        nil
+      end
+    end
   end
 
   def request_headers(body)
