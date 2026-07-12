@@ -26,12 +26,32 @@ module Whatsapp::IncomingMessageServiceHelpers
 
   def message_content(message)
     # TODO: map interactive messages back to button messages in chatwoot
+    nfm_json = message.dig(:interactive, :nfm_reply, :response_json)
+    return format_nfm_reply_content(nfm_json) if nfm_json.present?
+
     message.dig(:text, :body) ||
       message.dig(:button, :text) ||
       message.dig(:interactive, :button_reply, :title) ||
       message.dig(:interactive, :list_reply, :title) ||
-      message.dig(:interactive, :nfm_reply, :response_json) ||
       message.dig(:name, :formatted_name)
+  end
+
+  def format_nfm_reply_content(response_json)
+    data = JSON.parse(response_json)
+    return response_json unless data.is_a?(Hash)
+
+    full_name = data['full_name'].to_s.strip.presence || data['name'].to_s.strip.presence
+    email = data['email'].to_s.strip.presence
+    phone = data['phone'].to_s.strip.presence
+    return response_json if full_name.blank? && email.blank? && phone.blank?
+
+    lines = ['📝 Datos de contacto']
+    lines << "• Nombre: #{full_name}" if full_name.present?
+    lines << "• Email: #{email}" if email.present?
+    lines << "• Teléfono: #{phone}" if phone.present?
+    lines.join("\n")
+  rescue JSON::ParserError
+    response_json
   end
 
   def file_content_type(file_type)
