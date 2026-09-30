@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  get '/hub-recovery', to: 'hub_recovery#show'
   # AUTH STARTS
   mount_devise_token_auth_for 'User', at: 'auth', controllers: {
     confirmations: 'devise_overrides/confirmations',

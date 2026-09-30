@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="robots" content="noindex">
+    <title>HappSea · Mensajes</title>
+  </head>
+  <body>
+    <main role="status">
+      <p>Conectando con HappSea…</p>
+      <a href="<%= @hub_url %>/messages" target="_top">Continuar en HappSea</a>
+    </main>
+    <script>
+      (() => {
+        const hub = <%= raw ERB::Util.json_escape(@hub_url.to_json) %>;
+        const origin = new URL(hub).origin;
+        if (window.parent === window) {
+          window.location.replace(hub + '/messages');
+          return;
+        }
+        const notify = () => {
+          let channel;
+          try { channel = sessionStorage.getItem('happsea_channel'); } catch (_) {}
+          window.parent.postMessage({ type: 'happsea:auth-required', channel }, origin);
+        };
+        window.addEventListener('message', event => {
+          if (event.origin === origin && event.source === window.parent && event.data?.type === 'happsea:probe') notify();
+        });
+        notify();
+      })();
+    </script>
+  </body>
+</html>

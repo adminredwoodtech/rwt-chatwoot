@@ -1,5 +1,7 @@
 class DashboardController < ActionController::Base
   include SwitchLocale
+  include HubManagedAuth
+  helper_method :hub_url, :hub_recovery?
 
   GLOBAL_CONFIG_KEYS = %w[
     LOGO
@@ -27,6 +29,7 @@ class DashboardController < ActionController::Base
   ].freeze
 
   before_action :set_application_pack
+  before_action :guard_hub_auth
   before_action :set_global_config
   before_action :set_dashboard_scripts
   around_action :switch_locale
@@ -45,11 +48,18 @@ class DashboardController < ActionController::Base
   end
 
   def set_global_config
-    @global_config = GlobalConfig.get(*GLOBAL_CONFIG_KEYS).merge(app_config)
+    @global_config = GlobalConfig.get(*GLOBAL_CONFIG_KEYS).merge(app_config).with_indifferent_access
+    return unless hub_url
+
+    @global_config.merge!(
+      'INSTALLATION_NAME' => 'HappSea', 'BRAND_NAME' => 'HappSea',
+      'LOGO' => "#{hub_url}/images/happsea_in_text.png", 'LOGO_DARK' => "#{hub_url}/images/happsea_in_text.png",
+      'LOGO_THUMBNAIL' => "#{hub_url}/favicon.svg", 'DISPLAY_MANIFEST' => false
+    )
   end
 
   def set_dashboard_scripts
-    @dashboard_scripts = sensitive_path? ? nil : GlobalConfig.get_value('DASHBOARD_SCRIPTS')
+    @dashboard_scripts = hub_url || sensitive_path? ? nil : GlobalConfig.get_value('DASHBOARD_SCRIPTS')
   end
 
   def ensure_installation_onboarding
@@ -70,6 +80,8 @@ class DashboardController < ActionController::Base
   def app_config
     {
       APP_VERSION: Chatwoot.config[:version],
+      HAPPSEA_HUB_URL: hub_url,
+      HUB_RECOVERY: hub_recovery?,
       VAPID_PUBLIC_KEY: VapidService.public_key,
       ENABLE_ACCOUNT_SIGNUP: GlobalConfigService.load('ENABLE_ACCOUNT_SIGNUP', 'false'),
       FB_APP_ID: GlobalConfigService.load('FB_APP_ID', ''),

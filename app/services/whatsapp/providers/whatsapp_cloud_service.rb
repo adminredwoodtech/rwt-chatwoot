@@ -17,7 +17,7 @@ class Whatsapp::Providers::WhatsappCloudService < Whatsapp::Providers::BaseServi
     request_body = {
       messaging_product: 'whatsapp',
       recipient_type: 'individual', # Only individual messages supported (not group messages)
-      to: phone_number,
+      **recipient_fields(phone_number),
       type: 'template',
       template: template_body
     }
@@ -81,6 +81,11 @@ class Whatsapp::Providers::WhatsappCloudService < Whatsapp::Providers::BaseServi
 
   private
 
+  def recipient_fields(address)
+    # https://developers.facebook.com/documentation/business-messaging/whatsapp/business-scoped-user-ids/
+    RegexHelper::WHATSAPP_BSUID_REGEX.match?(address) ? { recipient: address } : { to: address }
+  end
+
   def csat_template_service
     @csat_template_service ||= Whatsapp::CsatTemplateService.new(whatsapp_channel)
   end
@@ -105,7 +110,7 @@ class Whatsapp::Providers::WhatsappCloudService < Whatsapp::Providers::BaseServi
       body: {
         messaging_product: 'whatsapp',
         context: whatsapp_reply_context(message),
-        to: phone_number,
+        **recipient_fields(phone_number),
         text: { body: message.outgoing_content },
         type: 'text'
       }.to_json
@@ -128,7 +133,7 @@ class Whatsapp::Providers::WhatsappCloudService < Whatsapp::Providers::BaseServi
       body: {
         :messaging_product => 'whatsapp',
         :context => whatsapp_reply_context(message),
-        'to' => phone_number,
+        **recipient_fields(phone_number),
         'type' => type,
         type.to_s => type_content
       }.to_json
@@ -196,7 +201,7 @@ class Whatsapp::Providers::WhatsappCloudService < Whatsapp::Providers::BaseServi
       headers: api_headers,
       body: {
         messaging_product: 'whatsapp',
-        to: phone_number,
+        **recipient_fields(phone_number),
         interactive: payload,
         type: 'interactive'
       }.to_json

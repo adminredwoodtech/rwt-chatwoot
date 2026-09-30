@@ -25,6 +25,13 @@ module Redis::Alfred
       $alfred.with { |conn| conn.del(key) }
     end
 
+    def delete_if_value(key, value)
+      $alfred.with do |conn|
+        conn.eval("if redis.call('get', KEYS[1]) == ARGV[1] then return redis.call('del', KEYS[1]) else return 0 end",
+                  keys: [key], argv: [value])
+      end
+    end
+
     # increment a key by 1. throws error if key value is incompatible
     # sets key to 0 before operation if key doesn't exist
     def incr(key)
