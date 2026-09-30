@@ -3,6 +3,7 @@ import { clearBrowserSessionCookies } from 'dashboard/store/utils/api';
 import { hasAuthCookie } from './AuthHelper';
 import { DEFAULT_REDIRECT_URL } from 'dashboard/constants/globals';
 import { replaceRouteWithReload } from './CommonHelper';
+import { rememberHubChannel } from 'shared/helpers/hubSession';
 
 const validateSSOLoginParams = to => {
   const isLoginRoute = to.name === 'login';
@@ -12,12 +13,26 @@ const validateSSOLoginParams = to => {
 };
 
 export const validateRouteAccess = (to, next, chatwootConfig = {}) => {
+  rememberHubChannel();
+  // SPA navigation must pass through the same server gate as direct URLs.
+  if (
+    window.chatwootConfig?.happseaHubUrl &&
+    !window.chatwootConfig?.hubRecovery &&
+    !validateSSOLoginParams(to)
+  ) {
+    window.location.replace('/app/login');
+    return;
+  }
   // HAPPSEA: Capture embedded flag BEFORE any redirect. When a valid auth
   // cookie exists, the login page is skipped entirely, so this router guard
   // is the only reliable place to persist the flag before
   // window.location.replace() drops all query params.
   if (to.query && to.query.happsea_embedded === 'true') {
-    try { sessionStorage.setItem('happsea_embedded', 'true'); } catch (_) { /* noop */ }
+    try {
+      sessionStorage.setItem('happsea_embedded', 'true');
+    } catch (_) {
+      /* noop */
+    }
   }
 
   // Pages with ignoreSession:true would be rendered

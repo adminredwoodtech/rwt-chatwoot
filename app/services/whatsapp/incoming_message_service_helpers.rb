@@ -93,6 +93,22 @@ module Whatsapp::IncomingMessageServiceHelpers
   def lock_message_source_id!
     return false if messages_data.blank?
 
-    Whatsapp::MessageDedupLock.new(messages_data.first[:id]).acquire!
+    @message_dedup_lock = Whatsapp::MessageDedupLock.new(messages_data.first[:id])
+    @message_dedup_lock.acquire!
+  end
+
+  def process_locked_message
+    set_contact
+    return unless @contact
+    return if @contact.blocked? && !outgoing_echo
+
+    ActiveRecord::Base.transaction do
+      set_conversation
+      create_messages
+    end
+  rescue StandardError
+    # Retrying a failed job is safe; persisted source_id still deduplicates it.
+    @message_dedup_lock&.release!
+    raise
   end
 end

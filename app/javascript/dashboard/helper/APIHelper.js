@@ -1,6 +1,10 @@
 import Auth from '../api/auth';
+import { notifyHub } from 'shared/helpers/hubSession';
 
-const parseErrorCode = error => Promise.reject(error);
+const parseErrorCode = error => {
+  if (error.response?.status === 401) notifyHub('happsea:auth-required');
+  return Promise.reject(error);
+};
 
 export default axios => {
   const { apiHost = '' } = window.chatwootConfig || {};

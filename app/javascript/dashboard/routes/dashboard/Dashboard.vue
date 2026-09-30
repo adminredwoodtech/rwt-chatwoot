@@ -1,5 +1,6 @@
 <script>
 import { defineAsyncComponent, ref, computed } from 'vue';
+import { startHubSession } from 'shared/helpers/hubSession';
 
 import NextSidebar from 'next/sidebar/Sidebar.vue';
 import WootKeyShortcutModal from 'dashboard/components/widgets/modal/WootKeyShortcutModal.vue';
@@ -113,6 +114,12 @@ export default {
       },
       immediate: true,
     },
+  },
+  mounted() {
+    this.stopHubSession = startHubSession();
+  },
+  beforeUnmount() {
+    this.stopHubSession?.();
   },
   methods: {
     toggleMobileSidebar() {
