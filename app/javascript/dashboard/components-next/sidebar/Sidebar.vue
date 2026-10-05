@@ -7,6 +7,7 @@ import { useMapGetter } from 'dashboard/composables/store';
 import { useStore } from 'vuex';
 import { useI18n } from 'vue-i18n';
 import { useSidebarKeyboardShortcuts } from './useSidebarKeyboardShortcuts';
+import { loadAccountData } from 'dashboard/helper/loadAccountData';
 import { vOnClickOutside } from '@vueuse/components';
 import { FEATURE_FLAGS } from 'dashboard/featureFlags';
 import { useWindowSize, useEventListener } from '@vueuse/core';
@@ -178,13 +179,7 @@ const conversationCustomViews = useMapGetter(
 );
 
 onMounted(() => {
-  store.dispatch('labels/get');
-  store.dispatch('inboxes/get');
-  store.dispatch('notifications/unReadCount');
-  store.dispatch('teams/get');
-  store.dispatch('attributes/get');
-  store.dispatch('customViews/get', 'conversation');
-  store.dispatch('customViews/get', 'contact');
+  loadAccountData(store);
 });
 
 const sortedInboxes = computed(() =>

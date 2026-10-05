@@ -1,6 +1,7 @@
 <script>
 import { defineAsyncComponent, ref, computed } from 'vue';
 import { startHubSession } from 'shared/helpers/hubSession';
+import { loadAccountData } from 'dashboard/helper/loadAccountData';
 
 import NextSidebar from 'next/sidebar/Sidebar.vue';
 import WootKeyShortcutModal from 'dashboard/components/widgets/modal/WootKeyShortcutModal.vue';
@@ -117,6 +118,8 @@ export default {
   },
   mounted() {
     this.stopHubSession = startHubSession();
+    // HAPPSEA: the hidden sidebar is what normally loads this data.
+    if (this.isHappseaEmbedded) loadAccountData(this.$store);
   },
   beforeUnmount() {
     this.stopHubSession?.();

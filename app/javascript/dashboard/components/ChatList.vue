@@ -796,6 +796,9 @@ useEmitter('fetch_conversation_stats', () => {
 });
 
 onMounted(() => {
+  // HAPPSEA: open on the first tab the agent may see ("Todos" when permitted).
+  const [firstTab] = assigneeTabItems.value;
+  if (firstTab) activeAssigneeTab.value = firstTab.key;
   store.dispatch('setChatListFilters', conversationFilters.value);
   setFiltersFromUISettings();
   store.dispatch('setChatStatusFilter', activeStatus.value);
