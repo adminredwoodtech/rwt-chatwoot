@@ -33,6 +33,7 @@
     <script>
       window.chatwootConfig = {
         happseaHubUrl: <%= raw ERB::Util.json_escape(@global_config['HAPPSEA_HUB_URL'].to_json) %>,
+        happseaAgentReviewsEnabled: <%= (ENV['AGENT_REVIEW_API_TOKEN'].present? && ENV['HAPPSEA_BRIDGE_INTERNAL_URL'].present?).to_json %>,
         hubRecovery: <%= @global_config['HUB_RECOVERY'].to_json %>,
         hostURL: '<%= ENV.fetch('FRONTEND_URL', '') %>',
         helpCenterURL: '<%= ENV.fetch('HELPCENTER_URL', '') %>',

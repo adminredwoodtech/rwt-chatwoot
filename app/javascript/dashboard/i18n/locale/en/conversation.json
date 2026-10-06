@@ -1,5 +1,16 @@
 {
   "CONVERSATION": {
+    "HAPPSEA_REVIEW": {
+      "SUBMIT": "Send for review",
+      "NOTE": "What should we review? (optional)",
+      "PLACEHOLDER": "For example: the agent ignored a date change.",
+      "CONFIRM": "Submit conversation",
+      "SENDING": "Capturing conversation…",
+      "QUEUED": "Review queued",
+      "RUNNING": "Analyzing conversation",
+      "OPEN": "View review in HappSea",
+      "ERROR": "Could not load or submit the review. Try again."
+    },
     "SELECT_A_CONVERSATION": "Please select a conversation from left pane",
     "CSAT_REPLY_MESSAGE": "Please rate the conversation",
     "404": "Sorry, we cannot find the conversation. Please try again",
