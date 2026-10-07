@@ -2,7 +2,6 @@
 import { computed } from 'vue';
 import ContactPanel from 'dashboard/routes/dashboard/conversation/ContactPanel.vue';
 import HappseaAIPanel from 'dashboard/components-next/happsea/HappseaAIPanel.vue';
-import HappseaReviewButton from 'dashboard/components-next/happsea/HappseaReviewButton.vue';
 import { useUISettings } from 'dashboard/composables/useUISettings';
 import { useWindowSize } from '@vueuse/core';
 import { vOnClickOutside } from '@vueuse/components';
@@ -61,10 +60,6 @@ const closeContactPanel = () => {
     </div>
     <!-- HAPPSEA: AI status + resume button — fixed at the bottom of the sidebar -->
     <HappseaAIPanel
-      v-if="currentChat.id"
-      :conversation-id="currentChat.id"
-    />
-    <HappseaReviewButton
       v-if="currentChat.id"
       :conversation-id="currentChat.id"
     />
