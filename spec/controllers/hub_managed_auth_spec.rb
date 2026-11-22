@@ -5,6 +5,14 @@ describe 'Hub-managed messaging authentication', type: :request do
     with_modified_env(HAPPSEA_HUB_URL: 'https://hub.example.com', HUB_RECOVERY_USERNAME: nil, HUB_RECOVERY_PASSWORD: nil) { example.run }
   end
 
+  # The login document is what these examples assert. Skip Vite's on-demand
+  # build so CI does not need a frontend compile to render that HTML.
+  before do
+    manifest = ViteRuby.instance.manifest
+    allow(manifest).to receive(:resolve_entries).and_return({ scripts: [], imports: [], stylesheets: [] })
+    allow(manifest).to receive(:vite_client_src).and_return(nil)
+  end
+
   it 'renders a non-login gate for direct login, reset and signup routes' do
     ['/', '/app/login', '/app/login/sso', '/app/auth/signup', '/app/auth/reset/password'].each do |path|
       get path
