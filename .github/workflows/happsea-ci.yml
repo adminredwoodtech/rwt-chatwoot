@@ -1,0 +1,161 @@
+# Lean CI for the HappSea Chatwoot fork.
+# Image publishing stays in build-ghcr.yml (main) and docker.yml (develop).
+name: HappSea CI
+
+on:
+  pull_request:
+    branches: [main, develop]
+  workflow_dispatch:
+    inputs:
+      full_suite:
+        description: Also run the full RSpec suite. Upstream failures do not fail this workflow.
+        type: boolean
+        default: false
+
+permissions:
+  contents: read
+
+concurrency:
+  group: happsea-ci-${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
+env:
+  # setup-ruby passes --jobs unless BUNDLE_JOBS is set. One job avoids a
+  # parallel git checkout race on the devise-secure_password gem.
+  BUNDLE_JOBS: "1"
+
+jobs:
+  lint-backend:
+    name: RuboCop changed Ruby
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: RuboCop files changed from the base branch
+        env:
+          BASE_REF: ${{ github.base_ref || 'main' }}
+        run: |
+          git fetch --no-tags origin "$BASE_REF"
+          mapfile -t files < <(git diff --name-only --diff-filter=ACMR "origin/${BASE_REF}...HEAD" -- '*.rb')
+          if [ "${#files[@]}" -eq 0 ]; then
+            echo "No Ruby files changed"
+            exit 0
+          fi
+          printf 'Linting:\n%s\n' "${files[@]}"
+          bundle exec rubocop --force-exclusion "${files[@]}"
+
+  backend:
+    name: HappSea specs
+    runs-on: ubuntu-24.04
+    services:
+      postgres:
+        image: pgvector/pgvector:pg16
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: ''
+          POSTGRES_DB: postgres
+          POSTGRES_HOST_AUTH_METHOD: trust
+        ports:
+          - 5432:5432
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+      redis:
+        image: redis:alpine
+        ports:
+          - 6379:6379
+        options: --entrypoint redis-server
+    env:
+      RAILS_ENV: test
+      POSTGRES_HOST: localhost
+      POSTGRES_USERNAME: postgres
+      POSTGRES_PASSWORD: ''
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: ruby/setup-ruby@v1
+        with:
+          bundler-cache: true
+
+      - name: Create and load the test database
+        run: |
+          bundle exec rake db:create
+          bundle exec rake db:schema:load
+
+      - name: Run HappSea and fork specs
+        run: |
+          bundle exec rspec --format documentation \
+            spec/controllers/api/v1/hub_sso_controller_spec.rb \
+            spec/controllers/hub_managed_auth_spec.rb \
+            spec/middleware/frame_ancestors_middleware_spec.rb \
+            spec/lib/webhooks/trigger_spec.rb \
+            spec/services/whatsapp/incoming_message_service_spec.rb \
+            spec/services/whatsapp/incoming_message_service_helpers_spec.rb \
+            spec/services/whatsapp/incoming_message_whatsapp_cloud_service_spec.rb \
+            spec/services/whatsapp/incoming_message_whatsapp_cloud_service_identity_spec.rb \
+            spec/controllers/microsoft/callbacks_controller_spec.rb \
+            spec/controllers/google/callbacks_controller_spec.rb
+
+      - name: Run the full RSpec suite
+        if: github.event_name == 'workflow_dispatch' && inputs.full_suite
+        continue-on-error: true
+        run: bundle exec rspec --format progress
+
+  frontend:
+    name: Frontend tests
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+          cache: pnpm
+
+      - name: Install pnpm dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Vitest
+        run: pnpm test
+
+      - name: ESLint files changed from the base branch
+        env:
+          BASE_REF: ${{ github.base_ref || 'main' }}
+        run: |
+          git fetch --no-tags origin "$BASE_REF"
+          mapfile -t files < <(git diff --name-only --diff-filter=ACMR "origin/${BASE_REF}...HEAD" -- '*.js' '*.vue' '*.cjs' '*.mjs')
+          if [ "${#files[@]}" -eq 0 ]; then
+            echo "No frontend files changed"
+            exit 0
+          fi
+          printf 'Linting:\n%s\n' "${files[@]}"
+          pnpm exec eslint "${files[@]}"
+
+  docker-build:
+    name: Docker image linux/amd64
+    runs-on: ubuntu-24.04
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: docker/setup-buildx-action@v3
+
+      - name: Build image without pushing
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: docker/Dockerfile
+          platforms: linux/amd64
+          push: false
+          load: false
