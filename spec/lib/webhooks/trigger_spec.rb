@@ -300,4 +300,56 @@ describe Webhooks::Trigger do
       trigger.execute(url, payload, webhook_type)
     end
   end
+
+  describe 'bridge SSRF bypass' do
+    let(:bridge_url) { 'http://happsea-bridge:8080' }
+    let(:payload) { { event: 'message_created', id: message.id } }
+    let(:http) { instance_double(Net::HTTP) }
+
+    around do |example|
+      with_modified_env(
+        HAPPSEA_BRIDGE_INTERNAL_URL: bridge_url,
+        CHATWOOT_WEBHOOK_IP_ALLOWLIST: '172.16.0.0/12,10.0.0.0/8,192.168.0.0/16'
+      ) { example.run }
+    end
+
+    def stub_direct_http(host, port)
+      allow(Net::HTTP).to receive(:new).with(host, port).and_return(http)
+      allow(http).to receive(:use_ssl=)
+      allow(http).to receive(:open_timeout=)
+      allow(http).to receive(:read_timeout=)
+      allow(http).to receive(:request).and_return(instance_double(Net::HTTPResponse))
+    end
+
+    it 'posts directly when the webhook origin matches the bridge' do
+      stub_direct_http('happsea-bridge', 8080)
+      expect(SafeFetch).not_to receive(:fetch)
+      expect(http).to receive(:use_ssl=).with(false)
+
+      trigger.execute("#{bridge_url}/webhooks/chatwoot", payload, webhook_type)
+    end
+
+    it 'keeps SafeFetch for a private address that is not the bridge' do
+      expect(SafeFetch).to receive(:fetch).and_raise(SafeFetch::HttpError.new('403 Forbidden'))
+
+      expect { trigger.execute('http://10.1.2.3/hook', payload, webhook_type) }
+        .to change { message.reload.status }.from('sent').to('failed')
+    end
+
+    it 'keeps SafeFetch when only the port differs from the bridge' do
+      expect(SafeFetch).to receive(:fetch).and_raise(SafeFetch::HttpError.new('403 Forbidden'))
+
+      expect { trigger.execute('http://happsea-bridge:9090/hook', payload, webhook_type) }
+        .to change { message.reload.status }.from('sent').to('failed')
+    end
+
+    it 'keeps SafeFetch when the bridge URL is not configured' do
+      with_modified_env(HAPPSEA_BRIDGE_INTERNAL_URL: nil) do
+        expect(SafeFetch).to receive(:fetch).and_raise(SafeFetch::HttpError.new('403 Forbidden'))
+
+        expect { trigger.execute("#{bridge_url}/webhooks/chatwoot", payload, webhook_type) }
+          .to change { message.reload.status }.from('sent').to('failed')
+      end
+    end
+  end
 end

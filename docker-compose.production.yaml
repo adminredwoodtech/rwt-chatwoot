@@ -2,6 +2,8 @@ version: '3'
 
 services:
   base: &base
+    # Upstream compose image. HappSea production pulls ghcr.io/<repository>:main
+    # (see .github/workflows/build-ghcr.yml). :latest tracks that same main build.
     image: chatwoot/chatwoot:latest
     env_file: .env ## Change this file for customized env variables
     volumes:

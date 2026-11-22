@@ -13,6 +13,8 @@ module Redis::RedisKeys
   ## User Keys
   # SSO Auth Tokens
   USER_SSO_AUTH_TOKEN = 'USER_SSO_AUTH_TOKEN::%<user_id>d::%<token>s'.freeze
+  # Hub SSO signatures already accepted, so the same signed request cannot be replayed
+  HUB_SSO_REPLAY_KEY = 'HUB_SSO_REPLAY::%<signature>s'.freeze
 
   ## Online Status Keys
   # hash containing user_id key and status as value

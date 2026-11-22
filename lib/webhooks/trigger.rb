@@ -40,7 +40,7 @@ class Webhooks::Trigger
 
   def perform_request
     body = @payload.to_json
-    if internal_webhook_url?
+    if bridge_webhook?
       perform_direct_request(body)
     else
       SafeFetch.fetch(
@@ -55,10 +55,11 @@ class Webhooks::Trigger
     end
   end
 
-  # Sends a plain Net::HTTP POST, bypassing SsrfFilter for trusted internal hosts.
+  # Sends a plain Net::HTTP POST, bypassing SsrfFilter for the configured bridge only.
   def perform_direct_request(body)
     uri = URI.parse(@url)
-    http = Net::HTTP.new(uri.host, uri.port)
+    http = Net::HTTP.new(uri.hostname, uri.port)
+    http.use_ssl = uri.scheme == 'https'
     http.open_timeout = webhook_timeout
     http.read_timeout = webhook_timeout
     req = Net::HTTP::Post.new(uri.request_uri, request_headers(body))
@@ -66,21 +67,24 @@ class Webhooks::Trigger
     http.request(req)
   end
 
-  # Returns true if the webhook hostname resolves to an IP within CHATWOOT_WEBHOOK_IP_ALLOWLIST.
-  # ssrf_filter 1.5.x has no built-in allowlist, so we check manually and use plain Net::HTTP
-  # for admin-configured internal endpoints (e.g. the bridge container on the Docker network).
-  def internal_webhook_url?
-    raw = ENV.fetch('CHATWOOT_WEBHOOK_IP_ALLOWLIST', '')
-    return false if raw.blank?
-
-    allowed = raw.split(',').filter_map { |cidr| IPAddr.new(cidr.strip) rescue nil }
-    return false if allowed.empty?
-
-    hostname = URI.parse(@url).hostname
-    resolved = Resolv.getaddresses(hostname).filter_map { |ip| IPAddr.new(ip) rescue nil }
-    resolved.any? { |ip| allowed.any? { |range| range === ip } }
+  # True only when the webhook origin matches HAPPSEA_BRIDGE_INTERNAL_URL.
+  # Private CIDRs (including CHATWOOT_WEBHOOK_IP_ALLOWLIST) do not grant a bypass:
+  # any other address, including other private hosts, still goes through SafeFetch.
+  def bridge_webhook?
+    bridge = request_origin(ENV.fetch('HAPPSEA_BRIDGE_INTERNAL_URL', ''))
+    target = request_origin(@url)
+    bridge.present? && target == bridge
   rescue StandardError
     false
+  end
+
+  def request_origin(raw)
+    return if raw.blank?
+
+    uri = URI.parse(raw.to_s.strip)
+    return unless uri.is_a?(URI::HTTP) && uri.hostname.present?
+
+    "#{uri.scheme}://#{uri.hostname.downcase}:#{uri.port}"
   end
 
   def request_headers(body)
