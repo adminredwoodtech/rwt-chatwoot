@@ -1,7 +1,7 @@
 # pre-build stage
 # Using Debian-slim instead of Alpine to use pre-compiled grpc binaries (avoids memory-intensive compilation)
 FROM node:24-slim as node
-FROM ruby:3.4.13-slim AS pre-builder
+FROM ruby:3.4.4-slim AS pre-builder
 
 ARG NODE_VERSION="24.13.0"
 ARG PNPM_VERSION="10.2.0"
@@ -93,7 +93,7 @@ RUN rm -rf /gems/ruby/3.4.0/cache/*.gem \
   && rm .gitignore
 
 # final build stage
-FROM ruby:3.4.13-slim
+FROM ruby:3.4.4-slim
 
 ARG NODE_VERSION="24.13.0"
 ARG PNPM_VERSION="10.2.0"
