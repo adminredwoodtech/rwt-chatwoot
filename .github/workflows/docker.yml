@@ -1,3 +1,6 @@
+# Develop builds publish :develop and the commit SHA only.
+# Production pulls ghcr.io/<repository>:main from build-ghcr.yml.
+# This workflow must not publish :latest, or it would overwrite the main image.
 name: Build and Push Docker Image
 
 on:
@@ -41,7 +44,6 @@ jobs:
           tags: |
             type=ref,event=branch
             type=sha,prefix=
-            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/develop' }}
 
       - name: Build and push
         uses: docker/build-push-action@v5

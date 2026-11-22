@@ -1,3 +1,9 @@
+# HappSea production image.
+#
+# Pull ghcr.io/<repository>:main. That tag is published on every push to main.
+# :latest is published from this same main-branch build, so it matches :main.
+# It is not tied to the GitHub default branch. The develop workflow must not
+# publish :latest, or it would move the tag off the image production runs.
 name: Build and Push Chatwoot Image
 
 on:
@@ -41,7 +47,7 @@ jobs:
           tags: |
             type=ref,event=branch
             type=sha,prefix=
-            type=raw,value=latest,enable={{is_default_branch}}
+            type=raw,value=latest,enable=${{ github.ref == 'refs/heads/main' }}
 
       - name: Build and push
         uses: docker/build-push-action@v5
